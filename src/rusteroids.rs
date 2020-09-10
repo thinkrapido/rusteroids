@@ -12,11 +12,14 @@ use amethyst::{
 };
 
 use log::info;
+use amethyst::assets::Handle;
 
 /// A dummy game state that shows 3 sprites.
-pub struct MyState;
+pub struct Rusteroids {
+    sprite_sheet_handle: Option<Handle<SpriteSheet>>,
+}
 
-impl SimpleState for MyState {
+impl SimpleState for Rusteroids {
     // Here, we define hooks that will be called throughout the lifecycle of our game state.
     //
     // In this example, `on_start` is used for initializing entities
@@ -94,7 +97,7 @@ fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
 /// which will then be assigned to entities for rendering them.
 ///
 /// The provided `world` is used to retrieve the resource loader.
-fn load_sprites(world: &mut World) -> Vec<SpriteRender> {
+fn load_sprite_sheet(world: &mut World) -> Vec<SpriteRender> {
     // Load the texture for our sprites. We'll later need to
     // add a handle to this texture to our `SpriteRender`s, so
     // we need to keep a reference to it.
@@ -102,7 +105,7 @@ fn load_sprites(world: &mut World) -> Vec<SpriteRender> {
         let loader = world.read_resource::<Loader>();
         let texture_storage = world.read_resource::<AssetStorage<Texture>>();
         loader.load(
-            "sprites/logo.png",
+            "sprites/sprite-sheet.png",
             ImageFormat::default(),
             (),
             &texture_storage,
@@ -115,7 +118,7 @@ fn load_sprites(world: &mut World) -> Vec<SpriteRender> {
         let loader = world.read_resource::<Loader>();
         let sheet_storage = world.read_resource::<AssetStorage<SpriteSheet>>();
         loader.load(
-            "sprites/logo.ron",
+            "sprites/sprite-sheet.ron",
             SpriteSheetFormat(texture_handle),
             (),
             &sheet_storage,
@@ -125,7 +128,7 @@ fn load_sprites(world: &mut World) -> Vec<SpriteRender> {
     // Create our sprite renders. Each will have a handle to the texture
     // that it renders from. The handle is safe to clone, since it just
     // references the asset.
-    (0..3)
+    (0..5)
         .map(|i| SpriteRender {
             sprite_sheet: sheet_handle.clone(),
             sprite_number: i,
